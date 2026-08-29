@@ -1,3 +1,5 @@
+import json
+
 form_data = {
     "name": None,
     "age": None,
@@ -30,3 +32,10 @@ def get_missing_fields():
         for field, value in form_data.items()
         if value is None
     ]
+
+
+def save_form(filename="completed_form.json"):
+    with open(filename, "w", encoding="utf-8") as file:
+        json.dump(form_data, file, ensure_ascii=False, indent=4)
+
+    print(f"\n💾 Form saved to {filename}")
