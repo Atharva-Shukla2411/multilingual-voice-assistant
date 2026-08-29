@@ -1,0 +1,5 @@
+faster-whisper #speech to text
+sounddevice #audio recording
+scipy #audio recording
+pyttsx3 #text to speech
+requests #LLM requests
