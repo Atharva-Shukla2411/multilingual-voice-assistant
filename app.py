@@ -1,4 +1,3 @@
-
 import streamlit as st
 import json
 import io
@@ -164,9 +163,12 @@ def get_form_json():
 def create_pdf():
 
     from reportlab.lib import colors
-    from reportlab.lib.enums import TA_CENTER, TA_LEFT
+    from reportlab.lib.enums import TA_CENTER
     from reportlab.lib.pagesizes import A4
-    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.styles import (
+        getSampleStyleSheet,
+        ParagraphStyle
+    )
     from reportlab.lib.units import mm
     from reportlab.platypus import (
         SimpleDocTemplate,
@@ -267,7 +269,7 @@ def create_pdf():
 
     story.append(
         Paragraph(
-            "MULTILINGUAL VOICE FORM ASSISTANT",
+            "MULTILINGUAL EDGE VOICE ASSISTANT",
             title_style
         )
     )
@@ -300,7 +302,6 @@ def create_pdf():
         )
     )
 
-    # Table header
     table_data = [
         [
             Paragraph(
@@ -314,7 +315,6 @@ def create_pdf():
         ]
     ]
 
-    # Fields
     field_labels = {
         "name": "Name",
         "age": "Age",
@@ -322,7 +322,12 @@ def create_pdf():
         "phone": "Phone"
     }
 
-    for field in ["name", "age", "address", "phone"]:
+    for field in [
+        "name",
+        "age",
+        "address",
+        "phone"
+    ]:
 
         value = form_data.get(field)
 
@@ -357,6 +362,7 @@ def create_pdf():
 
     form_table.setStyle(
         TableStyle([
+
             (
                 "BACKGROUND",
                 (0, 0),
@@ -441,6 +447,7 @@ def create_pdf():
                     verified_style
                 )
             ],
+
             [
                 Paragraph(
                     "The information above was reviewed "
@@ -454,6 +461,7 @@ def create_pdf():
 
     verified_box.setStyle(
         TableStyle([
+
             (
                 "BACKGROUND",
                 (0, 0),
@@ -512,11 +520,13 @@ def create_pdf():
     )
 
     details_data = [
+
         [
             Paragraph(
                 "<b>Language</b>",
                 normal_style
             ),
+
             Paragraph(
                 LANGUAGE_NAMES.get(
                     st.session_state.language,
@@ -531,6 +541,7 @@ def create_pdf():
                 "<b>Completed</b>",
                 normal_style
             ),
+
             Paragraph(
                 formatted_time,
                 normal_style
@@ -542,6 +553,7 @@ def create_pdf():
                 "<b>Processing</b>",
                 normal_style
             ),
+
             Paragraph(
                 "Local / Offline-first",
                 normal_style
@@ -559,6 +571,7 @@ def create_pdf():
 
     details_table.setStyle(
         TableStyle([
+
             (
                 "GRID",
                 (0, 0),
@@ -639,6 +652,7 @@ def create_pdf():
 
     privacy_box.setStyle(
         TableStyle([
+
             (
                 "BACKGROUND",
                 (0, 0),
@@ -724,21 +738,6 @@ def create_pdf():
 
 
 # ============================================================
-# HEADER
-# ============================================================
-
-st.title(
-    "🎙️ Multilingual Voice Form Assistant"
-)
-
-st.caption(
-    "Fill forms naturally using your voice — no typing required."
-)
-
-st.divider()
-
-
-# ============================================================
 # SIDEBAR
 # ============================================================
 
@@ -815,6 +814,82 @@ with st.sidebar:
 
 
 # ============================================================
+# MAIN HEADER
+# ============================================================
+
+st.markdown(
+    """
+    <style>
+
+    .main-logo-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 5px;
+        margin-bottom: 10px;
+    }
+
+    .tagline {
+        text-align: center;
+        font-size: 25px;
+        font-weight: 700;
+        line-height: 1.4;
+        margin-top: 12px;
+        margin-bottom: 28px;
+
+        background: linear-gradient(
+            90deg,
+            #20c997,
+            #4caf50,
+            #4aa3df
+        );
+
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# ------------------------------------------------------------
+# CENTERED LOGO
+# ------------------------------------------------------------
+
+logo_left, logo_center, logo_right = st.columns(
+    [1, 2, 1]
+)
+
+with logo_center:
+
+    st.image(
+        "logo.png",
+        width=500
+    )
+
+
+# ------------------------------------------------------------
+# TAGLINE
+# ------------------------------------------------------------
+
+st.markdown(
+    """
+    <div class="tagline">
+        Fill forms naturally using your voice — no typing required.
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
+st.divider()
+
+
+# ============================================================
 # STATUS BAR
 # ============================================================
 
@@ -877,7 +952,6 @@ with left_column:
 
     st.header("🤖 Assistant")
 
-
     # ========================================================
     # CORRECTION MODE
     # ========================================================
@@ -906,7 +980,6 @@ with left_column:
             correction_question
         )
 
-
         # ----------------------------------------------------
         # SPEAK CORRECTION QUESTION
         # ----------------------------------------------------
@@ -924,7 +997,6 @@ with left_column:
             st.session_state.last_spoken_question = (
                 correction_question
             )
-
 
         # ----------------------------------------------------
         # CORRECTION BUTTON
@@ -944,11 +1016,9 @@ with left_column:
                 "🎤 Listening... Please speak your correction."
             )
 
-
             correction_text, detected_language, confidence = (
                 get_voice_input()
             )
-
 
             if correction_text.strip():
 
@@ -960,16 +1030,13 @@ with left_column:
                     correction_text
                 )
 
-
                 st.session_state.status = (
                     "🧠 Understanding correction..."
                 )
 
-
                 result = extract_correction(
                     correction_text
                 )
-
 
                 try:
 
@@ -985,7 +1052,6 @@ with left_column:
                         "value"
                     )
 
-
                     if (
                         field is not None
                         and value is not None
@@ -996,11 +1062,9 @@ with left_column:
                             value
                         )
 
-
                         st.session_state.status = (
                             "✅ Correction saved"
                         )
-
 
                         if (
                             st.session_state.language
@@ -1019,12 +1083,10 @@ with left_column:
                                 "en"
                             )
 
-
                         st.success(
                             f"✅ {field.capitalize()} "
                             f"updated successfully!"
                         )
-
 
                         st.session_state.correction_mode = (
                             False
@@ -1036,13 +1098,11 @@ with left_column:
 
                         st.rerun()
 
-
                     else:
 
                         st.session_state.status = (
                             "⚠️ Correction not understood"
                         )
-
 
                         if (
                             st.session_state.language
@@ -1063,19 +1123,16 @@ with left_column:
                                 "en"
                             )
 
-
                         st.error(
                             "I couldn't determine what "
                             "needs to be corrected."
                         )
-
 
                 except json.JSONDecodeError:
 
                     st.session_state.status = (
                         "⚠️ Correction failed"
                     )
-
 
                     if (
                         st.session_state.language
@@ -1096,18 +1153,15 @@ with left_column:
                             "en"
                         )
 
-
                     st.error(
                         "I couldn't understand the correction."
                     )
-
 
             else:
 
                 st.session_state.status = (
                     "⚠️ No speech detected"
                 )
-
 
                 if (
                     st.session_state.language
@@ -1128,11 +1182,9 @@ with left_column:
                         "en"
                     )
 
-
                 st.warning(
                     "⚠️ No speech detected. Please try again."
                 )
-
 
     # ========================================================
     # NORMAL QUESTION MODE
@@ -1144,16 +1196,13 @@ with left_column:
             st.session_state.language
         ][next_field]
 
-
         st.caption(
             "CURRENT QUESTION"
         )
 
-
         st.subheader(
             question
         )
-
 
         # ----------------------------------------------------
         # SPEAK QUESTION ONLY ONCE
@@ -1173,9 +1222,7 @@ with left_column:
                 question
             )
 
-
         st.write("")
-
 
         # ----------------------------------------------------
         # LISTENING BUTTON
@@ -1195,11 +1242,9 @@ with left_column:
                 "🎤 Listening... Please speak your answer."
             )
 
-
             text, detected_language, confidence = (
                 get_voice_input()
             )
-
 
             # ------------------------------------------------
             # LANGUAGE DETECTION
@@ -1218,7 +1263,6 @@ with left_column:
                         detected_language
                     )
 
-
             # ------------------------------------------------
             # EMPTY INPUT
             # ------------------------------------------------
@@ -1228,7 +1272,6 @@ with left_column:
                 st.session_state.status = (
                     "⚠️ No speech detected"
                 )
-
 
                 if (
                     st.session_state.language
@@ -1248,11 +1291,9 @@ with left_column:
                         "en"
                     )
 
-
                 st.warning(
                     "⚠️ No speech detected. Please try again."
                 )
-
 
             else:
 
@@ -1268,28 +1309,23 @@ with left_column:
                     text
                 )
 
-
                 # --------------------------------------------
                 # FIND CURRENT FIELD
                 # --------------------------------------------
 
                 missing = get_missing_fields()
 
-
                 if missing:
 
                     current_field = missing[0]
-
 
                     st.session_state.status = (
                         "🧠 Understanding..."
                     )
 
-
                     st.info(
                         "🧠 Understanding your answer..."
                     )
-
 
                     try:
 
@@ -1302,7 +1338,6 @@ with left_column:
                             current_field
                         )
 
-
                         # ------------------------------------
                         # PARSE JSON
                         # ------------------------------------
@@ -1310,7 +1345,6 @@ with left_column:
                         data = json.loads(
                             result
                         )
-
 
                         # ====================================
                         # PHONE VALIDATION
@@ -1322,19 +1356,16 @@ with left_column:
                                 "phone"
                             )
 
-
                             if phone is None:
 
                                 st.session_state.status = (
                                     "⚠️ Invalid phone number"
                                 )
 
-
                                 st.error(
                                     "⚠️ Please provide exactly "
                                     "10 digits."
                                 )
-
 
                                 if (
                                     st.session_state.language
@@ -1357,26 +1388,21 @@ with left_column:
                                         "en"
                                     )
 
-
                             else:
 
                                 update_form(
                                     data
                                 )
 
-
                                 st.session_state.status = (
                                     "✅ Information saved"
                                 )
-
 
                                 st.success(
                                     "✅ Phone number saved successfully!"
                                 )
 
-
                                 st.rerun()
-
 
                         # ====================================
                         # OTHER FIELDS
@@ -1388,26 +1414,21 @@ with left_column:
                                 data
                             )
 
-
                             st.session_state.status = (
                                 "✅ Information saved"
                             )
-
 
                             st.success(
                                 "✅ Information added successfully!"
                             )
 
-
                             st.rerun()
-
 
                     except json.JSONDecodeError:
 
                         st.session_state.status = (
                             "⚠️ Understanding failed"
                         )
-
 
                         if (
                             st.session_state.language
@@ -1428,19 +1449,16 @@ with left_column:
                                 "en"
                             )
 
-
                         st.error(
                             "⚠️ I couldn't understand your answer. "
                             "Please try again."
                         )
-
 
                     except Exception as e:
 
                         st.session_state.status = (
                             "⚠️ Something went wrong"
                         )
-
 
                         st.error(
                             "Something went wrong while "
@@ -1451,7 +1469,6 @@ with left_column:
                             f"Technical detail: {e}"
                         )
 
-
     # ========================================================
     # FORM COMPLETE / CONFIRMATION
     # ========================================================
@@ -1461,7 +1478,6 @@ with left_column:
         st.success(
             "🎉 All fields have been completed!"
         )
-
 
         # ----------------------------------------------------
         # CONFIRMATION QUESTION
@@ -1486,11 +1502,9 @@ with left_column:
                 "Please say yes or no."
             )
 
-
         st.subheader(
             confirmation_question
         )
-
 
         # ----------------------------------------------------
         # SPEAK CONFIRMATION ONLY ONCE
@@ -1510,9 +1524,7 @@ with left_column:
                 confirmation_question
             )
 
-
         col_yes, col_no = st.columns(2)
-
 
         # ----------------------------------------------------
         # YES
@@ -1529,7 +1541,6 @@ with left_column:
                 st.session_state.status = (
                     "🎉 Form completed!"
                 )
-
 
                 if (
                     st.session_state.language
@@ -1548,11 +1559,9 @@ with left_column:
                         "en"
                     )
 
-
                 st.success(
                     "🎉 Form completed successfully!"
                 )
-
 
                 st.session_state.form_completed = (
                     True
@@ -1562,9 +1571,7 @@ with left_column:
                     datetime.now()
                 )
 
-
                 st.rerun()
-
 
         # ----------------------------------------------------
         # NO
@@ -1596,7 +1603,6 @@ with right_column:
 
     st.header("📝 Your Form")
 
-
     # ========================================================
     # NAME
     # ========================================================
@@ -1617,7 +1623,6 @@ with right_column:
             f"{icon} **{label}**\n\n"
             "⏳ Waiting for input"
         )
-
 
     # ========================================================
     # AGE
@@ -1640,7 +1645,6 @@ with right_column:
             "⏳ Waiting for input"
         )
 
-
     # ========================================================
     # ADDRESS
     # ========================================================
@@ -1661,7 +1665,6 @@ with right_column:
             f"{icon} **{label}**\n\n"
             "⏳ Waiting for input"
         )
-
 
     # ========================================================
     # PHONE
@@ -1684,7 +1687,6 @@ with right_column:
             "⏳ Waiting for input"
         )
 
-
     # ========================================================
     # NEXT FIELD
     # ========================================================
@@ -1696,7 +1698,6 @@ with right_column:
         st.warning(
             f"🎯 Next field: {icon} {label}"
         )
-
 
     # ========================================================
     # EXPORT COMPLETED FORM
@@ -1714,13 +1715,11 @@ with right_column:
             "Your form has been completed and verified."
         )
 
-
         # ----------------------------------------------------
         # PREVIEW JSON
         # ----------------------------------------------------
 
         form_json = get_form_json()
-
 
         with st.expander(
             "👁️ Preview saved information"
@@ -1730,7 +1729,6 @@ with right_column:
                 form_json,
                 language="json"
             )
-
 
         # ----------------------------------------------------
         # JSON DOWNLOAD
@@ -1743,7 +1741,6 @@ with right_column:
             mime="application/json",
             use_container_width=True
         )
-
 
         # ----------------------------------------------------
         # PDF DOWNLOAD
@@ -1793,4 +1790,3 @@ st.caption(
     "🎙️ Multilingual Edge Voice Assistant  •  "
     "Offline-first  •  Voice-powered  •  Privacy-focused"
 )
-
